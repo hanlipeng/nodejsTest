@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+</head>
+<body>
+<h1><%= title %></h1>
+<form action="/encSavePostTest/post" method="post">
+    <input name="username">
+    <input name="pwd">
+    <input type="submit">
+</form>
+<ul>
+    <%for(var user in users){%>
+        <li><%=users[user]%></li><button class="delete" onclick="deleteUser(this)" data="<%=users[user]._id%>">delete</button>
+    <%}%>
+</ul>
+</body>
+<script type="application/javascript">
+
+    function deleteUser(ele){
+        let id = ele.getAttribute("data");
+        var xhr = new XMLHttpRequest();
+            var url="/encSavePostTest/delete?id="+id;
+            xhr.open("get", url, true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");  // 添加http头，发送信息至服务器时内容编码类型
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {  // 304未修改
+                    let parse = JSON.parse(xhr.responseText);
+                    if(parse.success){
+                        location.reload(true);
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+</script>
+</html>
